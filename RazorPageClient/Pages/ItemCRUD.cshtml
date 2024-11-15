@@ -1,0 +1,111 @@
+﻿@page
+@model RazorPageClient.Pages.ItemCRUDModel
+@{
+    ViewData["Title"] = "Manage Items";
+}
+<h1>Manage Items</h1>
+
+<p><a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#addItemModal">Add New Item</a></p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>
+                    <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editItemModal"
+                       data-id="@item.Id" data-name="@item.Name" data-description="@item.Description">Edit</a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" style="display:inline;">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Add Item Modal -->
+<div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Create">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addItemModalLabel">Add Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Name">Name</label>
+                        <input type="text" class="form-control" id="Name" name="Name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Description">Description</label>
+                        <textarea class="form-control" id="Description" name="Description" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Item Modal (this will be populated dynamically) -->
+<div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Update">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editItemModalLabel">Edit Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="Id" id="EditId" />
+                    <div class="form-group">
+                        <label for="EditName">Name</label>
+                        <input type="text" class="form-control" id="EditName" name="Name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="EditDescription">Description</label>
+                        <textarea class="form-control" id="EditDescription" name="Description" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript to populate the Edit modal with data from the Edit button
+    var editButtons = document.querySelectorAll('[data-bs-toggle="modal"][data-bs-target="#editItemModal"]');
+    editButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Get data attributes
+            var id = button.getAttribute('data-id');
+            var name = button.getAttribute('data-name');
+            var description = button.getAttribute('data-description');
+
+            // Set values in the modal
+            document.getElementById('EditId').value = id;
+            document.getElementById('EditName').value = name;
+            document.getElementById('EditDescription').value = description;
+        });
+    });
+</script>
+

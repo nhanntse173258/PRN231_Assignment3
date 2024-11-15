@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcServer";
+
+package auth;
+
+service AuthService {
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+    rpc Logout(LogoutRequest) returns (LogoutResponse);
+}
+
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string token = 1; // JWT Token
+}
+
+message ValidateTokenRequest {
+    string token = 1; // The JWT token to validate
+}
+
+message ValidateTokenResponse {
+    bool isValid = 1; // Whether the token is valid
+    string userId = 2; // Optionally include user ID from the token
+}
+
+message LogoutRequest {
+    // Add properties as needed, such as user ID or token
+}
+
+message LogoutResponse {
+    bool success = 1;
+}
